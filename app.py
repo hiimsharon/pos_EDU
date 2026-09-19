@@ -13,11 +13,35 @@ PRODUCTS_DB = [
 
 @app.route('/')
 def index():
+    # 檢查是否已登入
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template('index.html', products=PRODUCTS_DB)
 
-# 新增或編輯商品庫存
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # 預設帳號密碼皆為 admin
+        if username == 'admin' and password == 'admin':
+            session['logged_in'] = True
+            return redirect(url_for('index'))
+        else:
+            error = '帳號或密碼錯誤（預設請輸入 admin / admin）'
+    return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
 @app.route('/update_stock', methods=['POST'])
 def update_stock():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
     prod_id = int(request.form.get('id'))
     for p in PRODUCTS_DB:
         if p['id'] == prod_id:
