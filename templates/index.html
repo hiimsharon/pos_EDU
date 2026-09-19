@@ -1,5 +1,124 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head><meta charset="UTF-8"><title>AURA VOGUE POS</title></head>
-<body><h1>AURA VOGUE POS 系統運作中</h1><a href="/login">登入系統</a></body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA VOGUE | 現代高質感女裝電商與 POS 系統 (v1)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-yellow: #FFE600;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            color: #2B2D31;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* 互動式發光背景特效 */
+        .glow-blob {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 230, 0, 0.3);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+            animation: floatBlob 8s infinite alternate;
+        }
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+        }
+        .btn-yellow {
+            background-color: var(--primary-yellow);
+            color: #000;
+            font-weight: 700;
+            border-radius: 50rem;
+            padding: 0.8rem 2rem;
+            border: none;
+            box-shadow: 0 4px 20px rgba(255, 230, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-yellow:hover {
+            background-color: #ffd000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 230, 0, 0.6);
+        }
+    </style>
+</head>
+<body class="position-relative">
+    <div class="glow-blob top-0 start-0"></div>
+    <div class="glow-blob bottom-0 end-0"></div>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- 頂部資訊與版本標籤 -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold m-0"><i class="fa-solid fa-gem text-warning me-2"></i>AURA VOGUE</h3>
+                    <span class="badge bg-dark text-warning rounded-pill px-3 py-2 fw-bold">v1.0.0 Stable</span>
+                </div>
+
+                <!-- 主視覺 Banner (帶互動特效) -->
+                <div class="glass-card p-5 mb-5 text-center position-relative overflow-hidden">
+                    <span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-3 fw-semibold">全通路智慧女裝 POS 系統</span>
+                    <h1 class="display-4 fw-bold mb-3">定義現代女性的優雅美學</h1>
+                    <p class="lead text-secondary mb-4">實體店面優先、線上同步上架、支援條碼動態修改、完整折讓與會計模組。</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#features" class="btn btn-yellow">探索核心功能</a>
+                        <a href="https://github.com/hiimsharon/pos_EDU" target="_blank" class="btn btn-outline-dark rounded-pill px-4 py-2 fw-semibold">GitHub 原始碼</a>
+                    </div>
+                </div>
+
+                <!-- 核心功能介紹網格 -->
+                <div class="row g-4" id="features">
+                    <div class="col-md-4">
+                        <div class="glass-card p-4 h-100 text-center">
+                            <i class="fa-solid fa-barcode fs-1 text-warning mb-3"></i>
+                            <h5 class="fw-bold">彈性條碼建檔</h5>
+                            <p class="text-muted small">支援隨時修改條碼與價格，輕鬆應對每年換季不同的條碼編號需求。</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="glass-card p-4 h-100 text-center">
+                            <i class="fa-solid fa-store fs-1 text-warning mb-3"></i>
+                            <h5 class="fw-bold">雙軌庫存管理</h5>
+                            <p class="text-muted small">實體店面優先扣減，線上商城自動同步上架，庫存零誤差。</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="glass-card p-4 h-100 text-center">
+                            <i class="fa-solid fa-receipt fs-1 text-warning mb-3"></i>
+                            <h5 class="fw-bold">會計與折讓</h5>
+                            <p class="text-muted small">內建單品與整單折讓功能，自動產生營業收入報表與傳票明細。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center text-muted small mt-5">
+                    &copy; 2026 AURA VOGUE pos_EDU v1. Designed with Glassmorphism & Interactive UI.
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
