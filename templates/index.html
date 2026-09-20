@@ -1,11 +1,1312 @@
+
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="h-full scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <title>NODE - Fashion Studio</title>
-    <!-- 你的完整網頁設計程式碼貼在這裡 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NODE — Luxury Women's Fashion Studio</title>
+    
+    <!-- Google Fonts: Cormorant Garamond & Noto Serif TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Noto+Serif+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FFE873',
+                        brandBg: '#E8E8E8',
+                        brandDark: '#1A1A1A',
+                        brandMuted: '#666666'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', '"Noto Serif TC"', 'serif'],
+                        sans: ['system-ui', '-apple-system', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Base Background */
+        body {
+            background-color: #E8E8E8;
+            color: #1A1A1A;
+            font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+            overflow-x: hidden;
+        }
+
+        /* Essential 3D Glassmorphism Spec Container */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.07);
+            border-radius: 20px;
+        }
+
+        /* Glass Floating Header */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+        }
+
+        /* Hero Lookbook Photo Hover: Zero Scale Zoom + Clean 3px White Outline */
+        .hero-marquee-photo {
+            outline: 0px solid transparent;
+            transition: outline 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            transform: none !important; /* Zero zoom strictly */
+        }
+        .hero-marquee-photo:hover {
+            outline: 3px solid #ffffff;
+            box-shadow: 0 0 0 3px #ffffff, 0 10px 25px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        /* Smooth Marquee Horizontal Streaming Animation */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 38s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(232, 232, 232, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Soft Lemon Yellow Button Polish */
+        .btn-yellow {
+            background-color: #FFE873;
+            color: #1A1A1A;
+            transition: all 0.2s ease;
+        }
+        .btn-yellow:hover {
+            background-color: #f7dd56;
+            box-shadow: 0 4px 15px rgba(255, 232, 115, 0.5);
+        }
+        .btn-yellow:active {
+            transform: scale(0.98);
+        }
+
+        /* Aspect ratio 3/4 utility guarantee */
+        .aspect-portrait {
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+        }
+    </style>
 </head>
-<body>
-    <h1>NODE Studio 網站更新測試</h1>
+<body class="min-h-screen flex flex-col antialiased selection:bg-[#FFE873] selection:text-black">
+
+    <!-- 1. Floating Translucent Header -->
+    <header class="fixed top-0 left-0 right-0 z-40 px-4 py-3 transition-all duration-300">
+        <div class="max-w-7xl mx-auto glass-header rounded-2xl px-5 py-3.5 flex items-center justify-between">
+            
+            <!-- Left: Hamburger Drawer Trigger Button -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleDrawer(true)" class="p-2 rounded-xl hover:bg-white/60 transition-colors focus:outline-none" aria-label="Open Navigation Menu">
+                    <i data-lucide="menu" class="w-6 h-6 text-neutral-800"></i>
+                </button>
+                <span class="hidden md:inline-block text-xs uppercase tracking-widest text-neutral-500 font-mono">MENU</span>
+            </div>
+
+            <!-- Center: Brand Serif Logo -->
+            <div class="text-center">
+                <a href="#" class="text-2xl sm:text-3xl font-serif font-bold tracking-[0.25em] text-neutral-900 hover:opacity-80 transition-opacity">
+                    NODE
+                </a>
+            </div>
+
+            <!-- Right: Search, Wishlist, Cart -->
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <!-- Search Toggle -->
+                <div class="relative hidden sm:block">
+                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="搜尋法式精品..." 
+                           class="w-36 md:w-48 pl-8 pr-3 py-1.5 text-xs bg-white/70 border border-white/90 rounded-full focus:outline-none focus:w-56 focus:bg-white transition-all duration-300 placeholder-neutral-400 font-sans">
+                    <i data-lucide="search" class="w-3.5 h-3.5 text-neutral-500 absolute left-2.5 top-2.5"></i>
+                </div>
+
+                <!-- Wishlist Counter Icon -->
+                <button onclick="toggleWishlistModal(true)" class="p-2 rounded-xl hover:bg-white/60 transition-colors relative" title="收藏夾">
+                    <i data-lucide="heart" class="w-5 h-5 text-neutral-800"></i>
+                    <span id="wishlistBadge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFE873] text-neutral-900 text-[10px] font-bold font-sans flex items-center justify-center border border-white">0</span>
+                </button>
+
+                <!-- Cart Drawer Trigger -->
+                <button onclick="toggleCartDrawer(true)" class="p-2 rounded-xl hover:bg-white/60 transition-colors relative" title="購物車">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-neutral-800"></i>
+                    <span id="cartBadge" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFE873] text-neutral-900 text-[10px] font-bold font-sans flex items-center justify-center border border-white">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Slide-out Hamburger Drawer -->
+    <div id="drawerOverlay" onclick="toggleDrawer(false)" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="navDrawer" class="fixed top-0 left-0 bottom-0 w-[85vw] max-w-sm bg-[#E8E8E8]/95 backdrop-blur-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between shadow-2xl border-r border-white/80 p-6 overflow-y-auto">
+        <div>
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between pb-6 border-b border-black/10">
+                <span class="text-xl font-serif font-bold tracking-widest text-neutral-900">NODE</span>
+                <button onclick="toggleDrawer(false)" class="p-2 rounded-full hover:bg-white/50 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-neutral-700"></i>
+                </button>
+            </div>
+
+            <!-- TOP: 會員中心 Member Center -->
+            <div class="py-6 border-b border-black/10">
+                <button onclick="toggleDrawer(false); openMemberModal();" class="w-full glass-card p-4 flex items-center justify-between hover:bg-white/90 transition-all text-left group">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-[#FFE873] flex items-center justify-center text-neutral-900 font-bold">
+                            <i data-lucide="user" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="font-serif font-semibold text-neutral-900 text-sm">會員中心 Member Center</div>
+                            <div class="text-xs text-neutral-500 font-sans">登入 / 註冊享有尊榮禮遇</div>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-neutral-400 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+
+            <!-- MIDDLE: 所有商品 Collapsible Category Tree -->
+            <div class="py-6 space-y-4">
+                <div class="text-xs tracking-widest text-neutral-400 font-mono uppercase">COLLECTION CATALOG</div>
+                
+                <div class="space-y-1">
+                    <button onclick="filterCategory('all'); toggleDrawer(false);" class="w-full py-2 px-3 rounded-xl text-left text-sm font-medium hover:bg-white/60 transition-colors flex items-center justify-between">
+                        <span>所有商品 All Lookbooks</span>
+                        <span class="text-xs text-neutral-400 font-sans" id="catCountAll">10</span>
+                    </button>
+
+                    <!-- Collapsible 上衣 -->
+                    <div class="rounded-xl overflow-hidden">
+                        <button onclick="toggleCategoryTree('topSubtree')" class="w-full py-2 px-3 rounded-xl text-left text-sm font-medium hover:bg-white/60 transition-colors flex items-center justify-between">
+                            <span>上衣 Tops</span>
+                            <i data-lucide="chevron-down" id="topSubtreeIcon" class="w-4 h-4 text-neutral-400 transition-transform"></i>
+                        </button>
+                        <div id="topSubtree" class="hidden pl-6 py-1 space-y-1 text-xs text-neutral-600 font-sans">
+                            <a href="#" onclick="filterCategory('Tops'); toggleDrawer(false);" class="block py-1.5 hover:text-black">針織衫 & 羊毛衫</a>
+                            <a href="#" onclick="filterCategory('Tops'); toggleDrawer(false);" class="block py-1.5 hover:text-black">法式真絲襯衫</a>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible 洋裝 -->
+                    <div class="rounded-xl overflow-hidden">
+                        <button onclick="toggleCategoryTree('dressSubtree')" class="w-full py-2 px-3 rounded-xl text-left text-sm font-medium hover:bg-white/60 transition-colors flex items-center justify-between">
+                            <span>洋裝 Dresses</span>
+                            <i data-lucide="chevron-down" id="dressSubtreeIcon" class="w-4 h-4 text-neutral-400 transition-transform"></i>
+                        </button>
+                        <div id="dressSubtree" class="hidden pl-6 py-1 space-y-1 text-xs text-neutral-600 font-sans">
+                            <a href="#" onclick="filterCategory('Dresses'); toggleDrawer(false);" class="block py-1.5 hover:text-black">長款輕紗連衣裙</a>
+                            <a href="#" onclick="filterCategory('Dresses'); toggleDrawer(false);" class="block py-1.5 hover:text-black">剪裁禮服裙</a>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible 外套 -->
+                    <div class="rounded-xl overflow-hidden">
+                        <button onclick="toggleCategoryTree('outerSubtree')" class="w-full py-2 px-3 rounded-xl text-left text-sm font-medium hover:bg-white/60 transition-colors flex items-center justify-between">
+                            <span>外套 Outerwear</span>
+                            <i data-lucide="chevron-down" id="outerSubtreeIcon" class="w-4 h-4 text-neutral-400 transition-transform"></i>
+                        </button>
+                        <div id="outerSubtree" class="hidden pl-6 py-1 space-y-1 text-xs text-neutral-600 font-sans">
+                            <a href="#" onclick="filterCategory('Outerwear'); toggleDrawer(false);" class="block py-1.5 hover:text-black">立裁廓型西裝</a>
+                            <a href="#" onclick="filterCategory('Outerwear'); toggleDrawer(false);" class="block py-1.5 hover:text-black">輕量雙排扣風衣</a>
+                            <a href="#" onclick="filterCategory('Outerwear'); toggleDrawer(false);" class="block py-1.5 hover:text-black">小香風外罩</a>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible 下身 -->
+                    <div class="rounded-xl overflow-hidden">
+                        <button onclick="toggleCategoryTree('bottomSubtree')" class="w-full py-2 px-3 rounded-xl text-left text-sm font-medium hover:bg-white/60 transition-colors flex items-center justify-between">
+                            <span>下身 Bottoms</span>
+                            <i data-lucide="chevron-down" id="bottomSubtreeIcon" class="w-4 h-4 text-neutral-400 transition-transform"></i>
+                        </button>
+                        <div id="bottomSubtree" class="hidden pl-6 py-1 space-y-1 text-xs text-neutral-600 font-sans">
+                            <a href="#" onclick="filterCategory('Bottoms'); toggleDrawer(false);" class="block py-1.5 hover:text-black">百褶半身裙</a>
+                            <a href="#" onclick="filterCategory('Bottoms'); toggleDrawer(false);" class="block py-1.5 hover:text-black">高腰垂墜寬褲</a>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible 飾品 -->
+                    <div class="rounded-xl overflow-hidden">
+                        <button onclick="toggleCategoryTree('accSubtree')" class="w-full py-2 px-3 rounded-xl text-left text-sm font-medium hover:bg-white/60 transition-colors flex items-center justify-between">
+                            <span>飾品 Accessories</span>
+                            <i data-lucide="chevron-down" id="accSubtreeIcon" class="w-4 h-4 text-neutral-400 transition-transform"></i>
+                        </button>
+                        <div id="accSubtree" class="hidden pl-6 py-1 space-y-1 text-xs text-neutral-600 font-sans">
+                            <a href="#" onclick="filterCategory('Accessories'); toggleDrawer(false);" class="block py-1.5 hover:text-black">天然珍珠耳飾</a>
+                            <a href="#" onclick="filterCategory('Accessories'); toggleDrawer(false);" class="block py-1.5 hover:text-black">羊絨流蘇披肩</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM: 關於我們 (Store Info) Strictly formatted according to prompt -->
+        <div class="pt-6 border-t border-black/10 text-xs text-neutral-600 space-y-2 font-sans">
+            <div class="font-serif font-bold text-neutral-900 text-sm mb-2">ABOUT NODE BOUTIQUE</div>
+            <div class="flex items-start space-x-2">
+                <i data-lucide="map-pin" class="w-4 h-4 text-neutral-500 shrink-0 mt-0.5"></i>
+                <span>門市地址：雲林縣 ______</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i data-lucide="phone" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+                <span>服務電話：05- ____________</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i data-lucide="clock" class="w-4 h-4 text-neutral-500 shrink-0"></i>
+                <span>營業時間：12:00 - 21:00</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 3. Hero Marquee Section -->
+    <section class="relative pt-24 pb-8 overflow-hidden">
+        <!-- Editorial Fixed Background Photograph -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" 
+                 alt="NODE Editorial Background" 
+                 class="w-full h-full object-cover filter brightness-[0.78] contrast-[1.05]">
+            <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#E8E8E8]"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 pt-8 pb-4 text-center text-white">
+            <span class="text-xs uppercase tracking-[0.3em] font-mono bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 inline-block mb-3">
+                AUTUMN / WINTER 2026 EDITORIAL LOOKBOOK
+            </span>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-serif font-light tracking-wide mb-2 drop-shadow-md">
+                MODERN ELEGANCE & DOPAMINE PALETTE
+            </h1>
+            <p class="text-xs sm:text-sm font-sans text-white/80 max-w-md mx-auto tracking-widest font-light">
+                點擊造型即刻預覽精選單品
+            </p>
+        </div>
+
+        <!-- Horizontal Infinite Marquee Carousel -->
+        <div class="relative z-10 w-full overflow-hidden py-6">
+            <div id="heroMarqueeTrack" class="animate-marquee space-x-4 px-4">
+                <!-- Dynamically populated via JS with vertical 3:4 photos without text overlays -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PLP Filter & Sort Bar -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+        <div class="glass-card p-4 sm:p-5 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            
+            <!-- Category Tags Filter -->
+            <div class="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none" id="categoryTagBar">
+                <button onclick="filterCategory('all')" id="btn-cat-all" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-[#FFE873] text-neutral-900 shadow-sm">
+                    全部系列 ALL
+                </button>
+                <button onclick="filterCategory('Tops')" id="btn-cat-Tops" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-white/60 hover:bg-white text-neutral-700">
+                    上衣 TOPS
+                </button>
+                <button onclick="filterCategory('Dresses')" id="btn-cat-Dresses" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-white/60 hover:bg-white text-neutral-700">
+                    洋裝 DRESSES
+                </button>
+                <button onclick="filterCategory('Outerwear')" id="btn-cat-Outerwear" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-white/60 hover:bg-white text-neutral-700">
+                    外套 OUTERWEAR
+                </button>
+                <button onclick="filterCategory('Bottoms')" id="btn-cat-Bottoms" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-white/60 hover:bg-white text-neutral-700">
+                    下身 BOTTOMS
+                </button>
+                <button onclick="filterCategory('Accessories')" id="btn-cat-Accessories" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all bg-white/60 hover:bg-white text-neutral-700">
+                    飾品 ACCESSORIES
+                </button>
+            </div>
+
+            <!-- Sorting Dropdown & Items Count -->
+            <div class="flex items-center justify-between md:justify-end space-x-4 pt-2 md:pt-0 border-t md:border-t-0 border-neutral-200">
+                <span id="productCountText" class="text-xs text-neutral-500 font-sans">顯示 10 件商品</span>
+                <div class="flex items-center space-x-2">
+                    <label for="sortSelect" class="text-xs text-neutral-500 font-sans shrink-0">排序：</label>
+                    <select id="sortSelect" onchange="handleSortChange(this.value)" class="text-xs bg-white/80 border border-white/90 rounded-xl px-3 py-1.5 focus:outline-none font-sans text-neutral-800 cursor-pointer">
+                        <option value="featured">推薦項目 Featured</option>
+                        <option value="price-low">價格：由低至高 Price: Low to High</option>
+                        <option value="price-high">價格：由高至低 Price: High to Low</option>
+                        <option value="name">名稱 Alphabetical</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Product Grid (Vertical 3:4 Rectangular Photos) -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Cards rendered dynamically via JS -->
+        </div>
+    </main>
+
+    <!-- 6. PDP Modal Window -->
+    <div id="pdpModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 overflow-y-auto">
+        <div class="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative my-8 text-neutral-900 border border-white/90 shadow-2xl">
+            <!-- Close Button -->
+            <button onclick="closePDPModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/80 hover:bg-white flex items-center justify-center transition-colors shadow-sm">
+                <i data-lucide="x" class="w-5 h-5 text-neutral-800"></i>
+            </button>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left: Vertical Portrait Photo Gallery -->
+                <div class="space-y-3">
+                    <div class="rounded-2xl overflow-hidden shadow-inner aspect-portrait bg-neutral-200">
+                        <img id="pdpMainImg" src="" alt="Product Photo" class="w-full h-full object-cover">
+                    </div>
+                    <!-- Thumbnails -->
+                    <div id="pdpThumbnails" class="flex space-x-2 overflow-x-auto pb-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Right: Product Details -->
+                <div class="flex flex-col justify-between space-y-5">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span id="pdpCategory" class="text-xs uppercase tracking-widest text-neutral-500 font-mono">CATEGORY</span>
+                            
+                            <!-- Stock Count Badge (No stock count on main cards, shown here strictly) -->
+                            <span id="pdpStockBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 font-sans border border-amber-200">
+                                ⚡ 僅剩 3 件 (少量現貨)
+                            </span>
+                        </div>
+
+                        <h2 id="pdpTitle" class="text-2xl md:text-3xl font-serif font-bold text-neutral-900">
+                            法式精品單品
+                        </h2>
+
+                        <div class="text-2xl font-sans font-medium text-neutral-900" id="pdpPrice">
+                            NT$ 0
+                        </div>
+
+                        <!-- Color Swatches -->
+                        <div class="pt-2">
+                            <label class="block text-xs font-sans text-neutral-600 mb-2 font-medium">顏色選擇 Color Swatches</label>
+                            <div id="pdpColorSwatches" class="flex space-x-2">
+                                <!-- JS Populated -->
+                            </div>
+                        </div>
+
+                        <!-- Size Selector -->
+                        <div class="pt-2">
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs font-sans text-neutral-600 font-medium">尺寸 Size</label>
+                                <button type="button" onclick="openSizeGuide()" class="text-xs text-neutral-500 underline font-sans hover:text-black">尺寸對照表 Size Guide</button>
+                            </div>
+                            <div id="pdpSizeOptions" class="grid grid-cols-3 gap-2">
+                                <button type="button" onclick="selectSize('S')" class="pdp-size-btn border border-neutral-300 py-2 rounded-xl text-xs font-sans font-semibold hover:border-black transition-all">S</button>
+                                <button type="button" onclick="selectSize('M')" class="pdp-size-btn border border-neutral-300 py-2 rounded-xl text-xs font-sans font-semibold hover:border-black transition-all">M</button>
+                                <button type="button" onclick="selectSize('L')" class="pdp-size-btn border border-neutral-300 py-2 rounded-xl text-xs font-sans font-semibold hover:border-black transition-all">L</button>
+                            </div>
+                        </div>
+
+                        <!-- Accordion Detail Tabs (Fabric Care & Try-on guide) -->
+                        <div class="pt-3 space-y-2 font-sans text-xs border-t border-neutral-200">
+                            <!-- Fabric Care -->
+                            <details class="group rounded-xl bg-white/60 p-3">
+                                <summary class="flex justify-between items-center font-semibold cursor-pointer text-neutral-800">
+                                    <span>布料材質與保養說明 Fabric Care</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <p id="pdpFabricText" class="mt-2 text-neutral-600 leading-relaxed">
+                                    選用高規格天然面料，建議低溫專業乾洗，避免烘乾以維持服貼廓型與亮麗色澤。
+                                </p>
+                            </details>
+
+                            <!-- Try-on Guide -->
+                            <details class="group rounded-xl bg-white/60 p-3">
+                                <summary class="flex justify-between items-center font-semibold cursor-pointer text-neutral-800">
+                                    <span>試穿建議與模特數據 Model & Fit Guide</span>
+                                    <i data-lucide="chevron-down" class="w-4 h-4 text-neutral-500 group-open:rotate-180 transition-transform"></i>
+                                </summary>
+                                <div id="pdpFitText" class="mt-2 text-neutral-600 leading-relaxed space-y-1">
+                                    <p>• 模特身高 173cm / 體重 49kg / 穿著 S 碼 (微鬆舒適剪裁)</p>
+                                    <p>• 版型正常，建議依平時穿著尺寸選擇即可。</p>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+
+                    <!-- Quantity & Add to Cart -->
+                    <div class="space-y-3 pt-4 border-t border-neutral-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex items-center border border-neutral-300 rounded-xl bg-white/80 overflow-hidden">
+                                <button onclick="updatePdpQty(-1)" class="px-3 py-2 text-neutral-600 hover:bg-neutral-100 transition-colors">-</button>
+                                <span id="pdpQty" class="px-4 py-2 font-sans font-semibold text-xs">1</span>
+                                <button onclick="updatePdpQty(1)" class="px-3 py-2 text-neutral-600 hover:bg-neutral-100 transition-colors">+</button>
+                            </div>
+
+                            <!-- Hex #FFE873 Soft Lemon Yellow Add to Cart Button -->
+                            <button onclick="addCurrentItemToCart()" class="flex-1 btn-yellow font-sans font-bold py-3 px-6 rounded-xl text-sm flex items-center justify-center space-x-2 shadow-md">
+                                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                                <span>加入購物車 | ADD TO CART</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Slide-out Shopping Cart Drawer -->
+    <div id="cartOverlay" onclick="toggleCartDrawer(false)" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="cartDrawer" class="fixed top-0 right-0 bottom-0 w-[90vw] max-w-md bg-[#E8E8E8]/95 backdrop-blur-2xl z-50 transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between shadow-2xl border-l border-white/80 p-6">
+        <!-- Cart Header -->
+        <div>
+            <div class="flex items-center justify-between pb-4 border-b border-black/10">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-neutral-800"></i>
+                    <span class="text-lg font-serif font-bold tracking-wider text-neutral-900">購物清單 MY CART</span>
+                </div>
+                <button onclick="toggleCartDrawer(false)" class="p-2 rounded-full hover:bg-white/50 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-neutral-700"></i>
+                </button>
+            </div>
+
+            <!-- Free Shipping Progress Bar -->
+            <div class="my-4 glass-card p-3 font-sans text-xs">
+                <div class="flex justify-between text-neutral-700 font-semibold mb-1">
+                    <span>全館滿 NT$ 3,000 免運費</span>
+                    <span id="freeShippingStatus">再滿 NT$ 3,000</span>
+                </div>
+                <div class="w-full bg-black/10 h-2 rounded-full overflow-hidden">
+                    <div id="freeShippingBar" class="bg-[#FFE873] h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+
+            <!-- Items List -->
+            <div id="cartItemsContainer" class="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+                <!-- JS populated -->
+            </div>
+        </div>
+
+        <!-- Cart Footer & Summary -->
+        <div class="pt-4 border-t border-black/10 font-sans space-y-3">
+            <div class="space-y-1 text-xs text-neutral-600">
+                <div class="flex justify-between">
+                    <span>商品小計 Subtotal</span>
+                    <span id="cartSubtotal" class="font-semibold text-neutral-900">NT$ 0</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>預估運費 Shipping</span>
+                    <span id="cartShipping">NT$ 100</span>
+                </div>
+                <div class="flex justify-between text-sm font-bold text-neutral-900 pt-2 border-t border-neutral-200">
+                    <span>總計 Total</span>
+                    <span id="cartTotal" class="text-base">NT$ 0</span>
+                </div>
+            </div>
+
+            <!-- Hex #FFE873 Checkout Action Button -->
+            <button onclick="checkoutCart()" class="w-full btn-yellow font-bold py-3.5 rounded-xl text-sm shadow-md flex items-center justify-center space-x-2">
+                <span>前往結帳 CHECKOUT</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Wishlist Modal -->
+    <div id="wishlistModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-lg w-full p-6 relative">
+            <div class="flex items-center justify-between pb-4 border-b border-black/10 mb-4">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="heart" class="w-5 h-5 text-neutral-800"></i>
+                    <h3 class="font-serif font-bold text-lg">我的收藏夾 WISHLIST</h3>
+                </div>
+                <button onclick="toggleWishlistModal(false)" class="p-1.5 rounded-full hover:bg-white/60">
+                    <i data-lucide="x" class="w-5 h-5 text-neutral-700"></i>
+                </button>
+            </div>
+            <div id="wishlistContainer" class="space-y-3 max-h-[60vh] overflow-y-auto">
+                <!-- JS Populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Modal -->
+    <div id="memberModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-md w-full p-6 relative font-sans text-neutral-900">
+            <button onclick="closeMemberModal()" class="absolute top-4 right-4 p-1.5 rounded-full hover:bg-white/60">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center mb-6">
+                <h3 class="font-serif font-bold text-2xl tracking-widest">NODE</h3>
+                <p class="text-xs text-neutral-500 mt-1">尊榮會員登入 MEMBER LOGIN</p>
+            </div>
+            <form onsubmit="handleMemberLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-neutral-700 mb-1">電子郵件 / 手機號碼 Email or Phone</label>
+                    <input type="text" required class="w-full px-3 py-2 text-xs bg-white/80 border border-white/90 rounded-xl focus:outline-none focus:bg-white" placeholder="yourname@domain.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-neutral-700 mb-1">密碼 Password</label>
+                    <input type="password" required class="w-full px-3 py-2 text-xs bg-white/80 border border-white/90 rounded-xl focus:outline-none focus:bg-white" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full btn-yellow font-bold py-2.5 rounded-xl text-xs shadow-md">
+                    登入會員 LOGIN
+                </button>
+            </form>
+            <div class="mt-4 text-center text-xs text-neutral-500">
+                <span>尚未成為會員？</span>
+                <a href="#" class="underline font-semibold hover:text-black">立即免費註冊</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Size Guide Modal Tooltip -->
+    <div id="sizeGuideModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="glass-card max-w-sm w-full p-5 text-xs font-sans relative">
+            <button onclick="closeSizeGuide()" class="absolute top-3 right-3 p-1">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <h4 class="font-serif font-bold text-base mb-3">尺寸標準表 (cm)</h4>
+            <table class="w-full text-center border-collapse">
+                <thead>
+                    <tr class="border-b border-neutral-300 font-semibold">
+                        <th class="py-1.5">尺寸</th>
+                        <th class="py-1.5">胸圍</th>
+                        <th class="py-1.5">腰圍</th>
+                        <th class="py-1.5">臀圍</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-neutral-200 text-neutral-600">
+                    <tr><td class="py-1.5 font-bold text-neutral-800">S</td><td>82-86</td><td>64-68</td><td>88-92</td></tr>
+                    <tr><td class="py-1.5 font-bold text-neutral-800">M</td><td>86-90</td><td>68-72</td><td>92-96</td></tr>
+                    <tr><td class="py-1.5 font-bold text-neutral-800">L</td><td>90-94</td><td>72-76</td><td>96-100</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Toast Notification Message Box -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-card px-5 py-3 flex items-center space-x-3 shadow-xl border border-white">
+        <div class="w-7 h-7 rounded-full bg-[#FFE873] flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-4 h-4 text-neutral-900"></i>
+        </div>
+        <span id="toastMsg" class="text-xs font-sans font-semibold text-neutral-800">已加入購物車</span>
+    </div>
+
+    <!-- 8. Footer Block with Boutique Details -->
+    <footer class="mt-16 bg-[#E8E8E8]/80 border-t border-white/80 pt-12 pb-8 font-sans">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-black/10">
+                
+                <!-- Col 1: Brand Info -->
+                <div class="space-y-3">
+                    <a href="#" class="text-3xl font-serif font-bold tracking-[0.2em] text-neutral-900 block">NODE</a>
+                    <p class="text-xs text-neutral-600 leading-relaxed font-serif italic">
+                        French Elegance & Japanese Dopamine Palette Aesthetics
+                    </p>
+                </div>
+
+                <!-- Col 2: Store Information (Strictly required Yunlin county format) -->
+                <div class="space-y-2 text-xs text-neutral-700">
+                    <h5 class="font-serif font-bold text-sm text-neutral-900 mb-3">實體展售門市</h5>
+                    <p class="flex items-center space-x-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-neutral-500"></i>
+                        <span>門市地址：雲林縣 ______</span>
+                    </p>
+                    <p class="flex items-center space-x-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-neutral-500"></i>
+                        <span>服務電話：05- ____________</span>
+                    </p>
+                    <p class="flex items-center space-x-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-neutral-500"></i>
+                        <span>營業時間：12:00 - 21:00</span>
+                    </p>
+                </div>
+
+                <!-- Col 3: Customer Care -->
+                <div class="space-y-2 text-xs text-neutral-700">
+                    <h5 class="font-serif font-bold text-sm text-neutral-900 mb-3">顧客服務</h5>
+                    <ul class="space-y-1.5">
+                        <li><a href="#" class="hover:underline">購物與配送說明</a></li>
+                        <li><a href="#" class="hover:underline">退換貨政策流程</a></li>
+                        <li><a href="#" class="hover:underline">VIP 會員尊榮權益</a></li>
+                        <li><a href="#" class="hover:underline">隱私權保護聲明</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Newsletter -->
+                <div class="space-y-3 text-xs text-neutral-700">
+                    <h5 class="font-serif font-bold text-sm text-neutral-900">訂閱新品週報</h5>
+                    <p class="text-neutral-500">第一時間獲取法式最新秀場與限量單品資訊</p>
+                    <div class="flex items-center">
+                        <input type="email" placeholder="Your Email Address" class="w-full px-3 py-2 text-xs bg-white/70 border border-white/90 rounded-l-xl focus:outline-none">
+                        <button class="btn-yellow px-4 py-2 font-bold rounded-r-xl text-xs shrink-0">訂閱</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright -->
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500">
+                <p>&copy; 2026 NODE Fashion Studio. All Rights Reserved.</p>
+                <div class="flex space-x-4 mt-3 sm:mt-0">
+                    <a href="#" class="hover:text-black"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="#" class="hover:text-black"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* Product Data Catalog (French Elegance & Dopamine Palettes) */
+        const PRODUCTS = [
+            {
+                id: 'node-01',
+                name: '檸檬黃純羊毛針織衫',
+                category: 'Tops',
+                price: 2880,
+                stock: 3,
+                colors: [{ name: 'Soft Lemon Yellow', hex: '#FFE873' }, { name: 'Cream White', hex: '#FFFDD0' }],
+                image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '100% 頂級澳洲美麗諾純羊毛，手感軟糯親膚不刺癢。建議專業乾洗或冷水手洗。',
+                fit: '模特身高 172cm / 體重 48kg / 穿著 S 碼 (輕盈微鬆剪裁)。'
+            },
+            {
+                id: 'node-02',
+                name: '薄荷綠百褶典雅半身裙',
+                category: 'Bottoms',
+                price: 2480,
+                stock: 5,
+                colors: [{ name: 'Mint Green', hex: '#A8E6CF' }, { name: 'Slate Gray', hex: '#708090' }],
+                image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '高密度垂墜壓褶混紡面料，挺括不易起皺，順滑內裡配戴舒適。',
+                fit: '模特身高 174cm / 體重 50kg / 穿著 S 碼 (高腰拉長身形比例)。'
+            },
+            {
+                id: 'node-03',
+                name: '柔桃粉輕紗法式洋裝',
+                category: 'Dresses',
+                price: 3680,
+                stock: 2,
+                colors: [{ name: 'Soft Peach', hex: '#FFD1DC' }, { name: 'Vanilla', hex: '#F3E5AB' }],
+                image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '法式進口輕盈透氣雪紡混紡，全內裡設計不透光。',
+                fit: '模特身高 170cm / 體重 47kg / 穿著 S 碼 (附精緻同色系腰帶)。'
+            },
+            {
+                id: 'node-04',
+                name: '石板灰立裁微廓型西裝外套',
+                category: 'Outerwear',
+                price: 4200,
+                stock: 4,
+                colors: [{ name: 'Slate Gray', hex: '#5A6B7C' }, { name: 'Sand Brown', hex: '#C2B280' }],
+                image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '精紡西裝面料，立體肩墊結構，展現流暢帥氣氣場。',
+                fit: '模特身高 175cm / 體重 52kg / 穿著 M 碼 (廓型修身款)。'
+            },
+            {
+                id: 'node-05',
+                name: '薰衣草紫真絲飄帶襯衫',
+                category: 'Tops',
+                price: 2980,
+                stock: 6,
+                colors: [{ name: 'Lavender', hex: '#E6E6FA' }, { name: 'Pure White', hex: '#FFFFFF' }],
+                image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1550614000-4895a10e1bfd?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '100% 桑蠶真絲混紡，具備天然珍珠光澤與親膚微涼感。',
+                fit: '模特身高 173cm / 體重 49kg / 穿著 S 碼。'
+            },
+            {
+                id: 'node-06',
+                name: '奶油白高腰垂墜寬褲',
+                category: 'Bottoms',
+                price: 2650,
+                stock: 3,
+                colors: [{ name: 'Cream White', hex: '#FFFDD0' }, { name: 'Oatmeal', hex: '#E0D5C1' }],
+                image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '高壓壓光垂墜布料，包容各種腿型，走動間充滿流動光澤。',
+                fit: '模特身高 171cm / 體重 48kg / 穿著 S 碼。'
+            },
+            {
+                id: 'node-07',
+                name: '鼠尾草綠輕量排扣風衣',
+                category: 'Outerwear',
+                price: 4850,
+                stock: 2,
+                colors: [{ name: 'Sage Green', hex: '#9CAF88' }, { name: 'Khaki', hex: '#C3B091' }],
+                image: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=800&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '微防潑水高密紡織面料，雙排扣搭配後腰活動式帶扣。',
+                fit: '模特身高 176cm / 體重 51kg / 穿著 S 碼。'
+            },
+            {
+                id: 'node-08',
+                name: '法式天然巴洛克珍珠耳環',
+                category: 'Accessories',
+                price: 1580,
+                stock: 8,
+                colors: [{ name: 'Pearl White', hex: '#F0EAD6' }],
+                image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '天然淡水異形巴洛克珍珠 + 18K 包金低敏金屬。',
+                fit: '單尺寸，獨一無二自然光澤形狀。'
+            },
+            {
+                id: 'node-09',
+                name: '霧藍色羊絨流蘇披肩',
+                category: 'Accessories',
+                price: 2280,
+                stock: 4,
+                colors: [{ name: 'Misty Blue', hex: '#B0C4DE' }, { name: 'Charcoal', hex: '#36454F' }],
+                image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '80% Cashmere 羊絨 + 20% 純羊毛混紡，超級柔軟保暖。',
+                fit: '規格：200cm x 70cm 大尺寸多功能穿搭。'
+            },
+            {
+                id: 'node-10',
+                name: '燕麥色法式小香風外罩',
+                category: 'Outerwear',
+                price: 3980,
+                stock: 3,
+                colors: [{ name: 'Oatmeal Tweed', hex: '#D7C4B7' }],
+                image: 'https://images.unsplash.com/photo-1550614000-4895a10e1bfd?q=80&w=800&auto=format&fit=crop',
+                gallery: [
+                    'https://images.unsplash.com/photo-1550614000-4895a10e1bfd?q=80&w=800&auto=format&fit=crop'
+                ],
+                fabric: '金屬絲線編織粗花呢粗編面料，復古雕花金屬扣。',
+                fit: '模特身高 172cm / 體重 49kg / 穿著 S 碼。'
+            }
+        ];
+
+        /* Application State */
+        let state = {
+            currentCategory: 'all',
+            sortBy: 'featured',
+            searchQuery: '',
+            cart: [],
+            wishlist: [],
+            activePdpItem: null,
+            pdpSelectedColor: null,
+            pdpSelectedSize: 'S',
+            pdpQuantity: 1
+        };
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeroMarquee();
+            renderProductGrid();
+            updateBadges();
+            lucide.createIcons();
+        });
+
+        /* Hero Marquee Render (Infinite streaming 3:4 vertical outfit photos without text) */
+        function renderHeroMarquee() {
+            const marqueeTrack = document.getElementById('heroMarqueeTrack');
+            if (!marqueeTrack) return;
+
+            // Double array for seamless infinite marquee loop
+            const items = [...PRODUCTS, ...PRODUCTS];
+            
+            marqueeTrack.innerHTML = items.map((item, idx) => `
+                <div onclick="openPDPModal('${item.id}')" class="shrink-0 w-44 sm:w-52 md:w-60 rounded-2xl overflow-hidden glass-card p-2 group transition-all duration-300">
+                    <div class="aspect-portrait overflow-hidden rounded-xl bg-neutral-200 relative">
+                        <img src="${item.image}" alt="Lookbook Outfit" class="hero-marquee-photo w-full h-full object-cover">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* Product Grid Render */
+        function renderProductGrid() {
+            const grid = document.getElementById('productGrid');
+            if (!grid) return;
+
+            // Filter logic
+            let filtered = PRODUCTS.filter(p => {
+                const matchCat = state.currentCategory === 'all' || p.category === state.currentCategory;
+                const matchSearch = p.name.toLowerCase().includes(state.searchQuery.toLowerCase());
+                return matchCat && matchSearch;
+            });
+
+            // Sort logic
+            if (state.sortBy === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (state.sortBy === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (state.sortBy === 'name') {
+                filtered.sort((a, b) => a.name.localeCompare(b.name, 'zh-TW'));
+            }
+
+            // Update item count text
+            document.getElementById('productCountText').innerText = `顯示 ${filtered.length} 件商品`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-neutral-500 font-sans glass-card">
+                        <i data-lucide="search-x" class="w-10 h-10 mx-auto mb-3 text-neutral-400"></i>
+                        <p class="text-sm">未找到符合條件的精選單品</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const isWish = state.wishlist.includes(item.id);
+                return `
+                    <div class="glass-card p-3.5 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-xl relative group">
+                        <!-- Photo Container (Strictly 3:4 Vertical Aspect Ratio) -->
+                        <div>
+                            <div class="aspect-portrait overflow-hidden rounded-xl relative bg-neutral-200 cursor-pointer" onclick="openPDPModal('${item.id}')">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                
+                                <!-- Wishlist Heart Button -->
+                                <button onclick="event.stopPropagation(); toggleWishlist('${item.id}')" 
+                                        class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/80 hover:bg-white backdrop-blur-md flex items-center justify-center transition-all shadow-sm">
+                                    <i data-lucide="heart" class="w-4 h-4 ${isWish ? 'text-red-500 fill-red-500' : 'text-neutral-700'}"></i>
+                                </button>
+                            </div>
+
+                            <!-- Card Info -->
+                            <div class="mt-3 space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] uppercase font-mono tracking-widest text-neutral-400">${item.category}</span>
+                                    
+                                    <!-- Color Swatch Dots -->
+                                    <div class="flex space-x-1">
+                                        ${item.colors.map(c => `<span class="w-2.5 h-2.5 rounded-full border border-black/20" style="background-color: ${c.hex}"></span>`).join('')}
+                                    </div>
+                                </div>
+
+                                <h3 onclick="openPDPModal('${item.id}')" class="font-serif font-semibold text-base text-neutral-900 cursor-pointer hover:underline line-clamp-1">
+                                    ${item.name}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!-- Price & Add Button -->
+                        <div class="mt-4 pt-2 border-t border-black/5 flex items-center justify-between">
+                            <span class="font-sans font-medium text-neutral-900 text-sm">NT$ ${item.price.toLocaleString()}</span>
+                            
+                            <!-- Soft Lemon Yellow Button -->
+                            <button onclick="openPDPModal('${item.id}')" class="btn-yellow px-3 py-1.5 rounded-xl text-xs font-bold font-sans flex items-center space-x-1">
+                                <span>選購</span>
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        /* Filter Functions */
+        function filterCategory(cat) {
+            state.currentCategory = cat;
+            
+            // Update Active Button styling
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-[#FFE873]', 'text-neutral-900', 'shadow-sm');
+                btn.classList.add('bg-white/60', 'text-neutral-700');
+            });
+
+            const activeBtn = document.getElementById(`btn-cat-${cat}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white/60', 'text-neutral-700');
+                activeBtn.classList.add('bg-[#FFE873]', 'text-neutral-900', 'shadow-sm');
+            }
+
+            renderProductGrid();
+        }
+
+        function handleSortChange(val) {
+            state.sortBy = val;
+            renderProductGrid();
+        }
+
+        function handleSearch(val) {
+            state.searchQuery = val;
+            renderProductGrid();
+        }
+
+        /* PDP Modal Logic */
+        function openPDPModal(id) {
+            const item = PRODUCTS.find(p => p.id === id);
+            if (!item) return;
+
+            state.activePdpItem = item;
+            state.pdpSelectedColor = item.colors[0];
+            state.pdpSelectedSize = 'S';
+            state.pdpQuantity = 1;
+
+            // Populate PDP Modal
+            document.getElementById('pdpMainImg').src = item.image;
+            document.getElementById('pdpCategory').innerText = item.category;
+            document.getElementById('pdpTitle').innerText = item.name;
+            document.getElementById('pdpPrice').innerText = `NT$ ${item.price.toLocaleString()}`;
+            document.getElementById('pdpStockBadge').innerText = `⚡ 僅剩 ${item.stock} 件 (少量現貨)`;
+            document.getElementById('pdpFabricText').innerText = item.fabric;
+            document.getElementById('pdpFitText').innerHTML = `<p>• ${item.fit}</p><p>• 正確尺碼，請依個人穿著習慣挑選。</p>`;
+            document.getElementById('pdpQty').innerText = '1';
+
+            // Gallery Thumbnails
+            const thumbContainer = document.getElementById('pdpThumbnails');
+            thumbContainer.innerHTML = item.gallery.map(img => `
+                <img src="${img}" onclick="document.getElementById('pdpMainImg').src='${img}'" 
+                     class="w-14 h-18 object-cover rounded-lg border border-white cursor-pointer hover:opacity-80 transition-opacity">
+            `).join('');
+
+            // Color Swatches
+            const colorContainer = document.getElementById('pdpColorSwatches');
+            colorContainer.innerHTML = item.colors.map((c, i) => `
+                <button onclick="selectColor(${i})" class="pdp-color-dot p-1 rounded-full border-2 ${i === 0 ? 'border-black' : 'border-transparent'}">
+                    <span class="block w-5 h-5 rounded-full border border-black/20" style="background-color: ${c.hex}" title="${c.name}"></span>
+                </button>
+            `).join('');
+
+            // Size buttons reset
+            selectSize('S');
+
+            // Show Modal
+            const modal = document.getElementById('pdpModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closePDPModal() {
+            const modal = document.getElementById('pdpModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function selectColor(index) {
+            if (!state.activePdpItem) return;
+            state.pdpSelectedColor = state.activePdpItem.colors[index];
+            const dots = document.querySelectorAll('.pdp-color-dot');
+            dots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('border-black');
+                    dot.classList.remove('border-transparent');
+                } else {
+                    dot.classList.remove('border-black');
+                    dot.classList.add('border-transparent');
+                }
+            });
+        }
+
+        function selectSize(size) {
+            state.pdpSelectedSize = size;
+            const btns = document.querySelectorAll('.pdp-size-btn');
+            btns.forEach(btn => {
+                if (btn.innerText === size) {
+                    btn.classList.add('bg-black', 'text-white', 'border-black');
+                    btn.classList.remove('border-neutral-300');
+                } else {
+                    btn.classList.remove('bg-black', 'text-white', 'border-black');
+                    btn.classList.add('border-neutral-300');
+                }
+            });
+        }
+
+        function updatePdpQty(delta) {
+            let q = state.pdpQuantity + delta;
+            if (q < 1) q = 1;
+            if (state.activePdpItem && q > state.activePdpItem.stock) q = state.activePdpItem.stock;
+            state.pdpQuantity = q;
+            document.getElementById('pdpQty').innerText = q;
+        }
+
+        function addCurrentItemToCart() {
+            if (!state.activePdpItem) return;
+
+            const cartKey = `${state.activePdpItem.id}-${state.pdpSelectedColor.name}-${state.pdpSelectedSize}`;
+            const existing = state.cart.find(c => c.key === cartKey);
+
+            if (existing) {
+                existing.qty += state.pdpQuantity;
+            } else {
+                state.cart.push({
+                    key: cartKey,
+                    id: state.activePdpItem.id,
+                    name: state.activePdpItem.name,
+                    price: state.activePdpItem.price,
+                    color: state.pdpSelectedColor.name,
+                    size: state.pdpSelectedSize,
+                    qty: state.pdpQuantity,
+                    image: state.activePdpItem.image
+                });
+            }
+
+            closePDPModal();
+            updateBadges();
+            renderCartItems();
+            showToast('已成功加入購物車！');
+            toggleCartDrawer(true);
+        }
+
+        /* Cart Drawer Functions */
+        function toggleCartDrawer(show) {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if (show) {
+                renderCartItems();
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsContainer');
+            if (state.cart.length === 0) {
+                container.innerHTML = `
+                    <div class="py-12 text-center text-neutral-500 font-sans">
+                        <i data-lucide="shopping-bag" class="w-8 h-8 mx-auto mb-2 text-neutral-400"></i>
+                        <p class="text-xs">您的購物袋目前是空的</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = state.cart.map(item => `
+                    <div class="glass-card p-3 flex items-center space-x-3 font-sans relative">
+                        <img src="${item.image}" alt="${item.name}" class="w-14 h-18 object-cover rounded-lg shrink-0">
+                        <div class="flex-1 text-xs space-y-1">
+                            <h4 class="font-serif font-bold text-neutral-900 text-sm line-clamp-1">${item.name}</h4>
+                            <p class="text-neutral-500">${item.color} / 尺寸：${item.size}</p>
+                            <div class="text-neutral-900 font-semibold">NT$ ${item.price.toLocaleString()}</div>
+                            <div class="flex items-center space-x-2 pt-1">
+                                <button onclick="updateCartQty('${item.key}', -1)" class="w-5 h-5 rounded bg-white border border-neutral-300 flex items-center justify-center">-</button>
+                                <span class="font-bold px-1">${item.qty}</span>
+                                <button onclick="updateCartQty('${item.key}', 1)" class="w-5 h-5 rounded bg-white border border-neutral-300 flex items-center justify-center">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeCartItem('${item.key}')" class="p-1 hover:text-red-500 text-neutral-400 transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Subtotal Calculation
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const shipping = subtotal >= 3000 || subtotal === 0 ? 0 : 100;
+            const total = subtotal + shipping;
+
+            document.getElementById('cartSubtotal').innerText = `NT$ ${subtotal.toLocaleString()}`;
+            document.getElementById('cartShipping').innerText = shipping === 0 ? '免運費' : `NT$ ${shipping}`;
+            document.getElementById('cartTotal').innerText = `NT$ ${total.toLocaleString()}`;
+
+            // Free Shipping Progress
+            const progress = Math.min(100, (subtotal / 3000) * 100);
+            document.getElementById('freeShippingBar').style.width = `${progress}%`;
+            document.getElementById('freeShippingStatus').innerText = subtotal >= 3000 
+                ? '已達免運門檻！' 
+                : `再滿 NT$ ${(3000 - subtotal).toLocaleString()}`;
+
+            lucide.createIcons();
+        }
+
+        function updateCartQty(key, delta) {
+            const item = state.cart.find(c => c.key === key);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                state.cart = state.cart.filter(c => c.key !== key);
+            }
+            updateBadges();
+            renderCartItems();
+        }
+
+        function removeCartItem(key) {
+            state.cart = state.cart.filter(c => c.key !== key);
+            updateBadges();
+            renderCartItems();
+        }
+
+        function checkoutCart() {
+            if (state.cart.length === 0) {
+                showToast('購物車內尚無商品的喔！');
+                return;
+            }
+            showToast('正在前往安全結帳頁面...');
+        }
+
+        /* Wishlist Logic */
+        function toggleWishlist(id) {
+            const idx = state.wishlist.indexOf(id);
+            if (idx > -1) {
+                state.wishlist.splice(idx, 1);
+                showToast('已從收藏夾移除');
+            } else {
+                state.wishlist.push(id);
+                showToast('已加入收藏夾');
+            }
+            updateBadges();
+            renderProductGrid();
+        }
+
+        function toggleWishlistModal(show) {
+            const modal = document.getElementById('wishlistModal');
+            if (show) {
+                renderWishlistItems();
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function renderWishlistItems() {
+            const container = document.getElementById('wishlistContainer');
+            const items = PRODUCTS.filter(p => state.wishlist.includes(p.id));
+
+            if (items.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-xs text-neutral-500 font-sans">尚無收藏任何單品</div>`;
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+                <div class="glass-card p-2.5 flex items-center justify-between font-sans">
+                    <div class="flex items-center space-x-3">
+                        <img src="${item.image}" class="w-12 h-16 object-cover rounded-md">
+                        <div>
+                            <h4 class="font-serif font-bold text-sm">${item.name}</h4>
+                            <div class="text-xs text-neutral-700">NT$ ${item.price.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <button onclick="openPDPModal('${item.id}'); toggleWishlistModal(false);" class="btn-yellow px-3 py-1.5 rounded-xl text-xs font-bold">
+                        檢視單品
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        /* Drawer & Accordion Logic */
+        function toggleDrawer(show) {
+            const drawer = document.getElementById('navDrawer');
+            const overlay = document.getElementById('drawerOverlay');
+            if (show) {
+                drawer.classList.remove('-translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function toggleCategoryTree(id) {
+            const target = document.getElementById(id);
+            const icon = document.getElementById(`${id}Icon`);
+            if (target) {
+                target.classList.toggle('hidden');
+                if (icon) icon.classList.toggle('rotate-180');
+            }
+        }
+
+        /* Member Modal Logic */
+        function openMemberModal() {
+            document.getElementById('memberModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeMemberModal() {
+            document.getElementById('memberModal').classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function handleMemberLogin(e) {
+            e.preventDefault();
+            closeMemberModal();
+            showToast('歡迎回來！會員登入成功');
+        }
+
+        /* Size Guide Logic */
+        function openSizeGuide() {
+            document.getElementById('sizeGuideModal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+        function closeSizeGuide() {
+            document.getElementById('sizeGuideModal').classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        /* UI Helpers */
+        function updateBadges() {
+            const cartBadge = document.getElementById('cartBadge');
+            const wishBadge = document.getElementById('wishlistBadge');
+
+            const totalCartCount = state.cart.reduce((sum, item) => sum + item.qty, 0);
+            if (totalCartCount > 0) {
+                cartBadge.innerText = totalCartCount;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+
+            if (state.wishlist.length > 0) {
+                wishBadge.innerText = state.wishlist.length;
+                wishBadge.classList.remove('hidden');
+            } else {
+                wishBadge.classList.add('hidden');
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
