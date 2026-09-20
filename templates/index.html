@@ -2,69 +2,10 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pos_EDU SHA - 服飾智慧零售與庫存管理系統</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>NODE - Fashion Studio</title>
+    <!-- 你的完整網頁設計程式碼貼在這裡 -->
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark bg-dark shadow-sm">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1">🧥 pos_EDU 服飾庫存與 POS 系統</span>
-            <a href="/logout" class="btn btn-outline-light btn-sm">登出系統</a>
-        </div>
-    </nav>
-
-    <div class="container my-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h4 class="card-title mb-3">商品庫存與資料管理</h4>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>圖片</th>
-                                        <th>條碼</th>
-                                        <th>商品名稱</th>
-                                        <th>分類</th>
-                                        <th>售價 (NT$)</th>
-                                        <th>實體店庫存</th>
-                                        <th>線上商城庫存</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for p in products %}
-                                    <tr>
-                                        <td><img src="{{ p.img }}" alt="" style="width: 45px; height: 45px; object-fit: cover;" class="rounded"></td>
-                                        <td><code>{{ p.barcode }}</code></td>
-                                        <td><strong>{{ p.name }}</strong></td>
-                                        <td><span class="badge bg-secondary">{{ p.category }}</span></td>
-                                        <td>${{ p.price }}</td>
-                                        <form action="/update_stock" method="POST">
-                                            <input type="hidden" name="id" value="{{ p.id }}">
-                                            <td><input type="number" name="stock_physical" value="{{ p.stock_physical }}" class="form-control form-control-sm" style="width: 80px;"></td>
-                                            <td><input type="number" name="stock_online" value="{{ p.stock_online }}" class="form-control form-control-sm" style="width: 80px;"></td>
-                                            <td>
-                                                <input type="hidden" name="price" value="{{ p.price }}">
-                                                <button type="submit" class="btn btn-sm btn-outline-primary">儲存</button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 版權宣告 -->
-        <footer class="text-center text-muted py-3">
-            <small>&copy; 2026 pos_EDU SHA. All rights reserved.</small>
-        </footer>
-    </div>
+<body>
+    <h1>NODE Studio 網站更新測試</h1>
 </body>
 </html>
